@@ -2,6 +2,7 @@ library(shiny)
 library(plotly)
 library(lsp)
 
+
 files <- list.files("examples") %>%
   map( ~ list(
     name = str_replace(.x, ".xls", ""),
