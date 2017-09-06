@@ -1,21 +1,10 @@
+
 library(shiny)
 library(plotly)
 library(lsp)
 
-files <- list.files("examples") %>%
-  map( ~ list(
-    name = str_replace(.x, ".xls", ""),
-    file_path =  glue("examples/{.x}")
-  )) %>%
-  set_names(map_chr(., "name"))
 
-
-ls <- files %>%
-  map( ~ process_sheet(.x))
-
-
-
-
+ls <- read_rds("data/master_ls.rds")
 
 
 
@@ -39,6 +28,7 @@ shinyServer(function(input, output) {
         selectInput("sel_var_in",
                     "Select a Type",
                     choices = pluck(ls, input$sel_sheet,"working_tbl", input$sel_series_type_in) %>% names(),
+                    selected = pluck(ls, input$sel_sheet,"working_tbl", input$sel_series_type_in) %>% names() %>% head(3) %>% tail(1),
                     multiple = T)
         
       })
@@ -54,10 +44,20 @@ shinyServer(function(input, output) {
       filter(cat %in% c(input$sel_var_in))
       
      
-      ggplot(df, aes(x = Date, y = as.numeric(var), col = cat, group = cat)) +
+      p <- ggplot(df, aes(x = Date, y = as.numeric(var), col = cat, group = cat)) +
         geom_line()
+    
       
-      ggplotly()
+      if(input$legend_toggle) {
+        ggplotly(p)
+      }  else {
+        ggplotly(p) %>% 
+          layout(showlegend = FALSE)
+      }
+      
+      
+      
+      
   })
     
   
