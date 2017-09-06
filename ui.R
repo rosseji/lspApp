@@ -15,13 +15,6 @@ ls <- files %>%
   map( ~ process_sheet(.x))
 
 
-
-# ls$`310101`$working_tbl$Original$
-# 
-# pluck(ls, "310101", "working_tbl") %>% names()
-# 
-# names(ls$`310101`$working_tbl)
-
 shinyUI(fluidPage(
 
   # Application title
